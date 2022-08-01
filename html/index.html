@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Home</title>
+        <link rel="stylesheet"
+              href="css/styles.css">
+    </head>
+
+    <body>
+        <div class="message-box">
+            <!-- Here we have an empty h1 tag where we’ll place our 
+                welcome message and, below that, a link to /private.  -->
+            <h1 id="welcome-message"></h1>
+            <div><a href="/private">Proceed to Admin</a></div>
+            <div><a href="/logout">Log Out</a></div>
+        </div>
+    </body>
+    <script>
+        // The crucial part here is the script tag at the bottom 
+        // where we’ll handle getting the username to create the
+        // welcome message.
+        const req = new XMLHttpRequest();
+        // We set the onreadystatechange property with the function 
+        // that will be called after we get our answer. In the callback, 
+        // we’re checking if we got a successful response and if so, we parse 
+        // the response, get the user object (the one we sent in the /user route, 
+        // remember?), and we find the welcome-message element to set its 
+        // innerText to our user.username.
+        req.onreadystatechange = function () {
+            if (req.readyState == 4 && req.status == 200) {
+                const user = JSON.parse(req.response).user;
+                document.getElementById('welcome-message').innerText = `Welcome ${user.username}!`;
+            }
+        };
+        // We open() the GET request to the user URL and we set the last parameter 
+        // to true to make it asynchronous.
+        req.open("GET", "http://localhost:3000/user", true);
+        req.send();
+    </script>
+
+</html>
